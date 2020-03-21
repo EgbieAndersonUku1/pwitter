@@ -1,0 +1,152 @@
+{% extends "index.html" %}
+{% from "_macro.html" import render_followers %}
+
+{% block body %}
+
+		<div class="container">
+			<div class="row">
+                {% include "__flash_msg.html" %}
+				<div class="col-lg-12">
+					<h3 class="text-center bold">Timeline</h3>
+				</div>
+
+				<div class="col-lg-3">
+					<div class="panel panel-default">
+						<div class="panel-body">
+							<div class="row pad">
+								<div class="col-lg-12">
+									<img src="{{url_for('static', filename='imgs/' + user.image) }}" class="img-responsive img-circle center-block" alt="Image" />
+								</div>
+							</div>
+							<div class="row pad">
+
+								<div class="col-lg-4 text-center">
+									<strong>
+										Tweets <br />
+										{{ tweets | length }}
+									</strong> 
+								</div>
+								<div class="col-lg-4 text-center">
+									<strong>
+										Followers
+										{{ user.followers.all() | length }} <br />
+
+									</strong>
+								</div>
+
+                                <div class="col-lg-4 text-center">
+									<strong>
+										Followees
+										{{ user.followees.all() | length }} <br />
+
+									</strong>
+								</div>
+							</div>
+						</div>
+						<ul class="list-group">
+							<a class="list-group-item" data-toggle="modal" href="#newPost" data-backdrop="static" data-keboard="false">
+								<i class="glyphicon glyphicon-plus-sign"></i> Post New Message
+							</a>
+
+                            <a class="list-group-item" data-toggle="modal" href="#editPost" data-backdrop="static" data-keboard="false">
+							</a>
+						</ul>
+					</div>
+				</div>
+
+				<div class="col-lg-6">
+					<div class="panel panel-default">
+						<div class="panel-body">
+                            {% if not tweets %}
+                            <strong>There are no tweets here yet. Follow someone to see their tweets and then come back.</strong>
+                            {% endif %}
+                            {% for tweet in tweets %}
+                                <div class="row">
+                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                        <div class="thumbnail">
+                                            <div class="caption">
+                                                <div class="row">
+                                                    <div class="col-lg-7">
+                                                        <!-- <i class="glyphicon glyphicon-user"></i>  -->
+                                                        <img src="{{ url_for('static', filename='imgs/' +  tweet.user.image ) }}" style="width: 30px; height: 30px;" class="img-circle">
+														<strong><a href="{{ url_for('profile_app.profile', username=tweet.user.username) }}">{{ tweet.user.name.title() }} </a></strong>
+														<small><em>@<a href="{{ url_for('profile_app.profile', username=tweet.user.username) }}">{{ tweet.user.username.title() }}</a></em></small>
+                                                    </div>
+                                                    <div class="col-lg-5 text-right">
+                                                        {{ time_passed(tweet.date_created) }}
+                                                    </div>
+                                                </div>
+                                                <div class="row pad">
+                                                    <div class="col-lg-12">
+                                                        {{ tweet.tweet }}
+                                                        <br>
+                                                        <br>
+                                                    </div>
+
+                                                     <div class="col-lg-5 text-left">
+                                                         {% if session.id == tweet.user_id %}
+                                                            (<a href="{{ url_for('tweets_app.edit_tweet', id=tweet.id) }}"> edit</a> |
+
+                                                                <a href="{{ url_for('tweets_app.delete_tweet', tweet_id=tweet.id) }}">delete</a>
+                                                             )
+
+                                                           {% endif %}
+                                                     </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+
+						</div>
+					</div>
+				</div>
+
+				{{ render_followers(watching) }}
+					</div>
+				</div>
+			</div>
+
+
+			<div class="modal fade" id="newPost">
+				<div class="modal-dialog">
+					<form action="{{ url_for('tweets_app.post_tweets') }}" role="form" method="POST">
+                        {{ form.hidden_tag() }}
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                <h4 class="modal-title">Post New Message</h4>
+                            </div>
+                            <div class="modal-body">
+                                    <div class="row">
+                                        <div class="col-lg-8 col-lg-offset-2">
+                                            <div class="form-group">
+                                                {{ render_field(tweets_form.tweet, **{'class': 'form-control', 'rows': 6, 'placeholder': 'Enter your tweet here'}) }}
+                                            </div>
+                                            <div class="form-group">
+                                                By posting on our platform, you agree to our <a href="#">Terms and Conditions</a>.
+                                            </div>
+                                        </div>
+                                    </div>
+
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">
+                                    <i class="glyphicon glyphicon-ban-circle"></i> Close
+                                </button>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="glyphicon glyphicon-send"></i> Post tweet
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+
+				</div>
+			</div>
+		</div>
+
+
+
+{% endblock %}

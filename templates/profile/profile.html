@@ -1,0 +1,172 @@
+{% extends "base.html" %}
+{% from "_macro.html" import render_followers %}
+
+{% block body %}
+
+	<nav class="navbar navbar-default" role="navigation">
+			<div class="container-fluid">
+				<!-- Brand and toggle get grouped for better mobile display -->
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+						<span class="sr-only">Toggle navigation</span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</button>
+					<a class="navbar-brand" href="#">Pwitter</a>
+				</div>
+
+				<!-- Collect the nav links, forms, and other content for toggling -->
+				{% include "nav_base2.html" %}
+			</div>
+		</nav>
+
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-12">
+					<h3 class="text-center bold">My Profile</h3>
+				</div>
+				<div class="col-lg-4">
+					<div class="panel panel-default">
+						<div class="panel-body">
+							<div class="row pad">
+								<div class="col-lg-12">
+									<img src="{{ url_for('static', filename='imgs/' + user.image) }}" class="img-responsive img-circle center-block" alt="Image" style="height: 220px;" />
+								</div>
+							</div>
+						</div>
+						<ul class="list-group">
+							<li class="list-group-item">
+								<i class="glyphicon glyphicon-user"></i> NAME:
+								<strong class="pull-right">{{ user.name.title() }}</strong>
+							</li>
+							<li class="list-group-item">
+								<i class="glyphicon glyphicon-th"></i> Username:
+                                <strong class="pull-right"><em>@<a href="{{ url_for('profile_app.profile', username=user.username)}}">
+                                    {{ user.username }}</a></em></strong>
+							</li>
+							<li class="list-group-item">
+								<i class="glyphicon glyphicon-calendar"></i> MEMBER SINCE:
+								<strong class="pull-right">{{ pretty_date }}</strong>
+								<br>
+							</li>
+							<li class="list-group-item">
+								<i class="glyphicon glyphicon-th-list"></i> FOLLOWERS COUNT:
+								<strong class="pull-right">{{ followees | length }}</strong>
+							</li>
+                            <li class="list-group-item">
+								<i class="glyphicon glyphicon-th-list"></i> Tweets:
+								<strong class="pull-right">{{ user.tweets.all() | length }}</strong>
+							</li>
+
+                            {% if user.username != session.username %}
+                                <li class="list-group-item">
+                                     {% if not following %}
+                                        <a href="{{ url_for('follow_app.follow_user', username=user.username) }}">
+                                            <i class="glyphicon glyphicon-ok"></i> CLICK HERE TO FOLLOW {{ user.username.upper() }}
+                                        </a>
+                                      {% else %}
+                                         <a href="{{ url_for('follow_app.unfollow', username=user.username) }}">
+                                             <i class="glyphicon glyphicon-ok"></i> CLICK HERE TO UNFOLLOW {{ user.username.upper() }}
+                                         </a>
+                                     {% endif %}
+                                </li>
+
+                            {% endif %}
+                        </ul>
+					</div>
+				</div>
+
+				<div class="col-lg-5">
+					<div class="panel panel-default">
+						<div class="panel-body">
+							<h4><strong>Activity</strong></h4>
+							<div role="tabpanel">
+								<!-- Nav tabs -->
+								<ul class="nav nav-tabs" role="tablist">
+									<li role="presentation" class="active">
+										<a href="#tweets" aria-controls="tweets" role="tab" data-toggle="tab">Tweets &amp; Replies</a>
+									</li>
+									<li role="presentation">
+										<a href="#followings" aria-controls="followings" role="tab" data-toggle="tab">Followers</a>
+									</li>
+								</ul>
+
+								<!-- Tab panes -->
+								<div class="tab-content">
+									<div role="tabpanel" class="tab-pane active" id="tweets">
+
+                                        {% if not tweets %}
+                                         <strong><em>You have no tweets or activities </em></strong>
+                                        {% endif %}
+
+                                        {% for tweet in tweets %}
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <div class="row pad">
+                                                        <div class="col-lg-2">
+                                                            <img src="{{ url_for('static', filename='imgs/' + tweet.user.image) }}" class="img-circle" style="width: 60px; height: 60px;" />
+                                                        </div>
+                                                        <div class="col-lg-10">
+                                                            <div>
+                                                                <strong class="mid">{{ tweet.user.name.title() }}</strong>
+                                                                <small><em>@{{ tweet.user.username }} ({{ time_passed(tweet.date_created) }})</em></small>
+
+                                                            </div>
+
+                                                            <div class="pad">
+                                                                {{ tweet.tweet }}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        {% endfor %}
+                                        <br>
+                                        <a href="{{ url_for('tweets_app.timeline', username=user.username)}}">Go to personal timeline >>></a>
+
+									</div>
+
+                                <div role="tabpanel" class="tab-pane" id="followings">
+                                       {% if not followees %}
+                                         <strong><em>You have no followers </em></strong>
+                                       {% endif %}
+                                       {% for followee in followees %}
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <div class="row pad">
+                                                        <div class="col-lg-2">
+                                                            <img src="{{ url_for('static', filename='imgs/' + followee.image) }}" class="img-circle" style="width: 60px; height: 60px;" />
+                                                        </div>
+                                                        <div class="col-lg-10">
+                                                            <div>
+                                                                <strong class="mid">{{ followee.name.title() }}</strong>
+                                                                <small><em>@<a href="{{ url_for('profile_app.profile', username=followee.username) }}">{{ followee.username }}</a></em></small>
+                                                            </div>
+                                                            <div class="row pad">
+                                                                <hr />
+                                                                <div class="col-lg-12">
+                                                                    Followers <i class="glyphicon glyphicon-th-list"></i> {{ followee.my_followers.all() | length }}
+                                                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                                </div>
+                                                            </div>
+
+            </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        {% endfor %}
+                                </div>
+
+                                </div>
+							</div>
+						</div>
+					</div>
+				</div>
+				{{ render_followers(watching) }}
+			</div>
+
+
+{% endblock %}
+
+

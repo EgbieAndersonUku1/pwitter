@@ -1,0 +1,21 @@
+
+<!-- Collect the nav links, forms, and other content for toggling -->
+				<div class="collapse navbar-collapse navbar-ex1-collapse">
+					<ul class="nav navbar-nav navbar-right">
+
+                        {% if not session.username %}
+                            <li class=""><a href="{{ url_for('register_app.register') }}">Sign Up</a></li>
+                            <li class=""><a href="#login" data-toggle="modal" data-keyboard="false">Login</a></li>
+                        {% else %}
+							<li class=""><a href="{{ url_for('profile_app.profile') }}">Hi, {{ session.username.title() }}</a></li>
+                            <li><a href="{{ url_for('tweets_app.timeline') }}">Timeline</a></li>
+                            <li class=""><a href="{{ url_for('profile_app.profile') }}">My Profile</a></li>
+						    <li class=""><a href="{{ url_for('user_app.users') }}">Users</a></li>
+                            <li class=""><a href="{{ url_for('logout_app.logout') }}">Logout</a></li>
+                        {% endif %}
+					</ul>
+				</div><!-- /.navbar-collapse -->
+			</div>
+
+
+

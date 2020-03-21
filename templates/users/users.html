@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+
+{% block body %}
+
+	<nav class="navbar navbar-default" role="navigation">
+			<div class="container-fluid">
+				<!-- Brand and toggle get grouped for better mobile display -->
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+						<span class="sr-only">Toggle navigation</span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</button>
+					<a class="navbar-brand" href="#">Pwitter</a>
+				</div>
+
+				<!-- Collect the nav links, forms, and other content for toggling -->
+				{% include "nav_base2.html" %}
+			</div>
+		</nav>
+
+		<div class="container">
+             <div class="col-lg-12">
+                <h3 class="text-center bold">Users</h3>
+             </div>
+
+
+                    <div class="row">
+                     {% for user in users %}
+                        {% if user and session.username and user.username.lower() != session.username.lower() %}
+                        <div class="col-lg-4">
+                            <div class="panel panel-default">
+                                <div class="panel-body">
+                                    <div class="row pad">
+                                        <div class="col-lg-12">
+                                            <img src="{{ url_for('static', filename='imgs/' + user.image) }}" class="img-responsive img-circle center-block" alt="Image" style="height: 220px;" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <ul class="list-group">
+                                    <li class="list-group-item">
+                                        <i class="glyphicon glyphicon-user"></i> NAME:
+                                        <strong class="pull-right">{{ user.name.title() }}</strong>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <i class="glyphicon glyphicon-th"></i> Username:
+                                        <strong class="pull-right"><em>@<a href="{{url_for('profile_app.profile', username=user.username) }}"> {{ user.username }}</a></em></strong>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <i class="glyphicon glyphicon-calendar"></i> MEMBER SINCE:
+                                        <strong class="pull-right">{{ prettify_date(user.joined_date) }}</strong>
+                                        <br>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <i class="glyphicon glyphicon-th-list"></i> FOLLOWERS COUNT:
+                                        <strong class="pull-right"> {{ user.my_followers.all() | length }}</strong>
+                                    </li>
+                                    <li class="list-group-item">
+                                            {% if user not in my_profile.followees.all() %}
+                                                <a href="{{ url_for('follow_app.follow_user', username=user.username) }}">
+                                                    <i class="glyphicon glyphicon-ok"></i> CLICK HERE TO FOLLOW {{ user.username.upper() }}
+                                                </a>
+                                            {% else %}
+                                                 <a href="{{ url_for('follow_app.unfollow', username=user.username) }}">
+                                                    <i class="glyphicon glyphicon-ok"></i> CLICK HERE TO UNFOLLOW {{ user.username.upper() }}
+                                                 </a>
+                                            {% endif %}
+                                    </li>
+                                    <li class="list-group-item">
+                                        <a href="{{ url_for('follow_app.my_followers', username=user.username) }}">
+                                            <i class="glyphicon glyphicon-ok"></i> {{ user.username.upper() }}'s FOLLOWERS
+                                        </a>
+                                    </li>
+
+                                </ul>
+                            </div>
+                        </div>
+
+                {% endif %}
+            {% endfor %}
+        </div>
+        </div>
+
+{% endblock %}
+
+

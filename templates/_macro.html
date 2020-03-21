@@ -1,0 +1,26 @@
+{% macro render_followers(user) %}
+    
+<div class="col-lg-3">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <h3>Who Trending </h3>
+        </div>
+        <ul class="list-group">
+            {% for u in user %}
+                <li class="list-group-item">
+                    {{ u.name.title() }}
+
+                    <div>
+                        <strong>@<a href="{{ url_for('profile_app.profile', username=u.username) }}" >{{ u.username }}</a></strong>
+                        <span class="pull-right">
+                            {{ u.followers.all() | length }} Followers
+                        </span>
+                    </div>
+                </li>
+               {% endfor %}
+        </ul>
+
+     </div>
+</div>
+
+{% endmacro %}

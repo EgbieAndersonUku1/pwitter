@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+
+{% from "__formhelpers.html" import render_field %}
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Pwitter</title>
+
+		<!-- Bootstrap CSS -->
+		<link rel="stylesheet" href="{{ url_for('static', filename='bs/css/united.min.css') }}">
+		<link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+	</head>
+	<body>
+
+		<div class="container-fluid">
+			<div class="row" id="banner">
+				<div class="title col-lg-12">
+					<p class="title">
+						<a href="#">Pwitter</a>
+					</p>
+					<p class="subtitle">...the awesome social platform where interaction has never been easier</p>
+				</div>
+			</div>
+		</div>
+
+
+		{% include "nav_base.html" %}
+		<div class="container">
+
+            {% if error %}
+                <div class="alert alert-danger" role="alert">
+                    {{ error }}
+                </div>
+            {% endif %}
+
+			<div class="modal fade" id="login">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+							<h4 class="modal-title">Log in to Pwitter</h4>
+						</div>
+
+						<div class="modal-body">
+							<div class="row">
+								<div class="col-lg-6 col-lg-offset-3">
+									<div class="text-center">
+										<h3>
+											<a href="#">Welcome to Pwitter</a>
+										</h3>
+									</div>
+                                    {% if error %}
+                                        <div class="alert alert-danger" role="alert">
+                                            {{ error }}
+                                        </div>
+                                    {% endif %}
+
+									<form method="POST" action="{{ url_for('login_app.login') }}" role="form"  enctype="multipart/form-data">
+
+                                        {{ form.hidden_tag() }}
+										<div class="form-group">
+
+											{{ render_field(form.username, **{'class': 'form-control', 'placeholder': 'username'}) }}
+										</div>
+										<div class="form-group">
+											{{ render_field(form.password, **{'class': 'form-control', 'placeholder': 'password'}) }}
+										</div>
+
+										<div class="form-group">
+											<button type="submit" class="btn btn-danger btn-block">Login</button>
+										</div>
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			{% block body %}{% endblock %}
+
+			<footer>
+				<div class="row pad">
+					<div class="col-lg-12 text-center">
+						Copyright Egbie&copy; 2020 <strong> <a href="#">Pwitter</a></strong>
+					</div>
+				</div>
+			</footer>
+		</div>
+
+		<!-- jQuery -->
+		<script src="{{ url_for('static', filename='bs/js/jquery.min.js') }}"></script>
+		<!-- Bootstrap JavaScript -->
+		<script src="{{ url_for('static', filename='bs/js/bootstrap.min.js') }}"></script>
+	</body>
+</html>

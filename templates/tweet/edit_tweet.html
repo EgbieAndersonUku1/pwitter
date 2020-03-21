@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+
+{% block body %}
+
+	<nav class="navbar navbar-default" role="navigation">
+			<div class="container-fluid">
+				<!-- Brand and toggle get grouped for better mobile display -->
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+						<span class="sr-only">Toggle navigation</span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</button>
+					<a class="navbar-brand" href="./">Eng@ge!</a>
+				</div>
+
+				<!-- Collect the nav links, forms, and other content for toggling -->
+				<div class="collapse navbar-collapse navbar-ex1-collapse">
+					<ul class="nav navbar-nav navbar-right">
+                        <li><a href="{{ url_for('tweets_app.timeline') }}">Hi, {{ session.username.title() }}</a></li>
+						<li><a href="{{ url_for('tweets_app.timeline') }}">Timeline</a></li>
+						<li class="active"><a href="{{ url_for('profile_app.profile') }}">My Profile</a></li>
+						<li class=""><a href="{{ url_for('logout_app.logout') }}">Logout</a></li>
+					</ul>
+				</div><!-- /.navbar-collapse -->
+			</div>
+		</nav>
+
+    <div class="row">
+
+        <div class="col-md-offset-3 col-md-6">
+
+            <h3>Edit tweet </h3>
+
+            {% if errors %}
+                <div class="alert alert-danger" role="alert">
+                    {% for error in errors %}
+                        <ul>
+                            <li>{{ error }}</li>
+                        </ul>
+
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+
+            {% from "__formhelpers.html" import render_field %}
+
+            <form method="POST" action="{{ url_for('tweets_app.edit_tweet', id=id) }}" role="form">
+
+
+                {{ form.hidden_tag() }}
+                {{ render_field(form.tweet, maxlength="140", rows="6", class="form-control") }}
+
+                <button id="edit_save_button" type="submit" class="btn btn-primary">Save</button>
+            </form>
+        </div>
+    </div>
+
+
+
+
+
+{% endblock %}
+
+

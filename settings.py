@@ -1,0 +1,22 @@
+UPLOAD_DIR = "C:\\Users\\abbie\\opt\\twitter\\static\\imgs"
+
+
+FLASK_APP ='app.py'
+FLASK_ENV ='development'
+
+MYSQL_DATABASE_PORT = 3306
+MYSQL_DATABASE_CHARSET = 'utf-8'
+
+SQLALCHEMY_DATABASE_URI = "sqlite:///etwitter.db"
+SQLALCHEMY_TRACK_MODIFICATIONS = False
+SQLALCHEMY_POOL_RECYCLE = 299
+
+DEBUG = False
+SECRET_KEY = "oCqozB_vWV5Cl6H3lK_u3-OI__k8iIAT5wsnRsKw4OECra4ZaQRG0xl_IpYc3YA8SCDuMVYsF90"
+UPLOAD_FOLDER = UPLOAD_DIR
+
+
+
+
+
+
