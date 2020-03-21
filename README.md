@@ -41,8 +41,10 @@ For copyright I called it pwitter.
         1. from create_app import db
         1. db.create_all()
 
-1. Next we need to create our admin user. Make you are in the root store folder open a terminal and type
-    1. python "create_admin.py" file and this should create your password.
+1. Next we need to create our local database. Make sure you are in the root store folder open a terminal and type
+    1. python "create_db.py" -d <name for the database with no space>.db
+    1. Open the settings file and replace <name of database no spaces> with your database name
+       Note it must end with ".db"
 
 1. Open the **settings.py** and enter the full path to **imgs** folder. The path will be different depending
 if it is on a Windows, Mac or Linux. Windows you must use double slash "\\" and "/" for Mac or Linux. Regardless of what OS
